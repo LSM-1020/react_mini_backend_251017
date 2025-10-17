@@ -1,0 +1,81 @@
+plugins {
+	id 'java'
+	id 'org.springframework.boot' version '3.5.6'
+	id 'io.spring.dependency-management' version '1.1.7'
+	id 'com.github.node-gradle.node' version '7.1.0' //React 빌드용 플러그인 추가
+}
+
+group = 'com.LSM'
+version = '0.0.1-SNAPSHOT'
+description = 'react_mini_project-251017'
+
+java {
+	toolchain {
+		languageVersion = JavaLanguageVersion.of(17)
+	}
+}
+
+configurations {
+	compileOnly {
+		extendsFrom annotationProcessor
+	}
+}
+
+repositories {
+	mavenCentral()
+}
+
+dependencies {
+	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+	implementation 'org.springframework.boot:spring-boot-starter-security'
+	implementation 'org.springframework.boot:spring-boot-starter-validation'
+	implementation 'org.springframework.boot:spring-boot-starter-web'
+	compileOnly 'org.projectlombok:lombok'
+	developmentOnly 'org.springframework.boot:spring-boot-devtools'
+	runtimeOnly 'com.mysql:mysql-connector-j'
+	annotationProcessor 'org.projectlombok:lombok'
+	testImplementation 'org.springframework.boot:spring-boot-starter-test'
+	testImplementation 'org.springframework.security:spring-security-test'
+	testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
+}
+
+tasks.named('test') {
+	useJUnitPlatform()
+}
+
+/*====React 프론트엔드 빌드 설정====*/
+
+/* Node.js 빌드 설정 */
+node {
+	version = '22.19.0' //Node.js 버전(현재 리액트 개발에 사용되었던 버전)
+	download = true
+	workDir = file("${project.buildDir}/nodejs")
+    npmWorkDir = file("${project.buildDir}/npm")
+}	
+
+def frontendDir = "$projectDir/src/main/frontend"
+
+tasks.register("npmCustomInstall", com.github.gradle.node.npm.task.NpmTask) {
+   workingDir = file(frontendDir)
+   args = ["install"]
+}
+
+tasks.register("npmBuild", com.github.gradle.node.npm.task.NpmTask) {
+   dependsOn("npmCustomInstall")
+   workingDir = file(frontendDir)
+   args = ["run", "build"]
+}
+
+tasks.register("copyFrontend", Copy) {
+   dependsOn("npmBuild")
+   from("$frontendDir/build")
+   into("$projectDir/src/main/resources/static")
+}
+
+tasks.named("processResources") {
+   dependsOn("copyFrontend")
+}
+
+
+
+
