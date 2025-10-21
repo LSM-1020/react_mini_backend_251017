@@ -104,9 +104,19 @@ public class CommentController {
 	@PutMapping("/{commentId}")
 	public ResponseEntity<?> updateComment(
 			@PathVariable("commentId") Long commentId,
-			@RequestBody CommentDto commentDto,
+			@Valid @RequestBody CommentDto commentDto,
+			BindingResult bindingResult,
 			Authentication auth) {
-		
+		//Spring Validation 결과 처리
+				if(bindingResult.hasErrors()) { //참이면 유효성 체크 실패->error 발생
+					Map<String, String> errors = new HashMap<>();
+					bindingResult.getFieldErrors().forEach(
+						err -> {
+							errors.put(err.getField(), err.getDefaultMessage());					
+						}
+					);
+					return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errors);
+				}
 		//수정할 댓글 찾아오기
 		Comment comment = commentRepository.findById(commentId).orElseThrow();
 		

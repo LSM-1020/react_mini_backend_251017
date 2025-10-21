@@ -71,6 +71,17 @@ public class BoardController {
 		//2.현재 페이지 번호 ->boardPage.getNumber()
 		//3.전체 페이지 수 ->boardPage.getTotalpages()
 		//4.전체 게시글 수 ->boardPage.getTotalElements()
+		List<Map<String, Object>> postList = boardPage.getContent().stream().map(board -> {
+	        Map<String, Object> postMap = new HashMap<>();
+	        postMap.put("id", board.getId());
+	        postMap.put("title", board.getTitle());
+	        postMap.put("author", board.getAuthor().getUsername());
+	        postMap.put("viewCount", board.getViewCount());
+	        postMap.put("createDate", board.getCreateDate());
+	        postMap.put("commentCount",
+	                (board.getComments() == null) ? 0 : board.getComments().size());
+	        return postMap;
+	    }).toList();
 		
 		Map<String,Object> pagingResponse = new HashMap<>(); //Map앞에는 문자열, 뒤에는 모든 타입이반환되게 object
 		pagingResponse.put("posts",boardPage.getContent() );//페이징된 현재 페이지에 해당하는 게시글 리스트 10개
@@ -132,17 +143,27 @@ public class BoardController {
 	}
 	
 	//특정 게시글 번호(id)로 조회(글 상세보기) 읽기,select라 getmapping
-	@GetMapping("/{id}")
-	public ResponseEntity<?> getPost(@PathVariable("id") Long id) {
-//		Board board = boardRepository.findById(id)
-//				.orElseThrow(()->new EntityNotFoundException("사용자 없음"));
-		Optional<Board> _board = boardRepository.findById(id);
-		if(_board.isPresent()) { //참이면 글 조회 성공
-			return ResponseEntity.ok(_board.get()); //해당 id글 반환
-		} else { //거짓이면 해당글 조회 실패
-			return ResponseEntity.status(404).body("해당게시글은 존재하지 않습니다");
-		}
-	}
+	 @GetMapping("/{id}")
+	    public ResponseEntity<?> getPost(@PathVariable("id") Long id) {
+	        Optional<Board> _board = boardRepository.findById(id);
+
+	        if (_board.isEmpty()) {
+	            return ResponseEntity.status(404).body("해당 게시글은 존재하지 않습니다.");
+	        }
+
+	        Board board = _board.get();
+
+	        // ✅ 조회수 1 증가
+	        board.setViewCount(board.getViewCount() + 1);
+	        boardRepository.save(board);
+
+	        // ✅ 댓글 개수 반영
+	        board.setCommentCount(
+	            (board.getComments() == null) ? 0L : (long) board.getComments().size()
+	        );
+
+	        return ResponseEntity.ok(board);
+	    }
 	
 	//특정 id의 글 삭제 (권한설정->로그인후 본인글만 삭제)
 	@DeleteMapping("/{id}")
@@ -163,7 +184,7 @@ public class BoardController {
 	
 	//게시글 수정 (권한설정->로그인후 본인글만 수정)
 	@PutMapping("/{id}")
-	public ResponseEntity<?> updatePost(@PathVariable("id") Long id, @RequestBody Board updateBoard, Authentication auth) {
+	public ResponseEntity<?> updatePost(@PathVariable("id") Long id, @Valid @RequestBody BoardDto boardDto,BindingResult bindingResult, Authentication auth) {
 		Optional<Board> _board = boardRepository.findById(id);
 		if(_board.isEmpty()) { //참이면 수정할 글 존재하지않음
 			return ResponseEntity.status(404).body("해당 게시글이 존재하지 않습니다");
@@ -171,9 +192,18 @@ public class BoardController {
 		if(auth == null || !auth.getName().equals(_board.get().getAuthor().getUsername())) {
 			return ResponseEntity.status(403).body("수정권한이 없습니다");
 		}
+		if(bindingResult.hasErrors()) { //참이면 에러
+			Map<String, String> errors = new HashMap<>();
+			bindingResult.getFieldErrors().forEach(
+				err -> {
+					errors.put(err.getField(),err.getDefaultMessage());
+				}
+			);
+			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errors);
+		}
 		Board oldPost = _board.get(); //기존 게시글
-		oldPost.setTitle(updateBoard.getTitle());
-		oldPost.setContent(updateBoard.getContent());
+		oldPost.setTitle(boardDto.getTitle());
+		oldPost.setContent(boardDto.getContent());
 		boardRepository.save(oldPost);
 		return ResponseEntity.ok(oldPost);
 	}

@@ -38,6 +38,7 @@ public class Comment {
 	@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 	private SiteUser author;
 	
+	
 	//댓글이 달릴 원글 id
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "board_id")

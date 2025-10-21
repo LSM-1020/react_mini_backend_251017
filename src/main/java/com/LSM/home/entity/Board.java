@@ -13,6 +13,7 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
+import jakarta.persistence.Transient;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -25,6 +26,7 @@ public class Board {
 	private Long id;
 	private String title;
 	private String content;
+	private Long viewCount = 0L;  // 조회수
 	
 	@CreationTimestamp//자동으로 insert 시 현재 날짜 시간 삽입
 	private LocalDateTime createDate; //게시판 글쓴 날짜
@@ -34,5 +36,14 @@ public class Board {
 	
 	@OneToMany(mappedBy = "board", cascade = CascadeType.ALL, orphanRemoval = true)
 	private List<Comment> comments = new ArrayList<>();
+
+	// 댓글 개수 계산용 (DB에는 저장 안해도 됨)
+    @Transient
+    private Long commentCount;
+
+    public Long getCommentCount() {
+        return (comments == null) ? 0L : comments.size();
+    }
+	
 	
 }

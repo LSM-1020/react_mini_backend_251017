@@ -47,6 +47,7 @@ public class AuthController {
 //	}
 	@PostMapping("/signup") //validation적용
 	public ResponseEntity<?> signup(@Valid @RequestBody SiteUserDto siteUserDto, BindingResult bindingResult) { //?를 써서 어떤 타입이던 반환되도록
+		
 		if(bindingResult.hasErrors()) { //참이면 에러
 			Map<String, String> errors = new HashMap<>(); //map으로 만들어야 프론트전달 가능
 			bindingResult.getFieldErrors().forEach(
@@ -65,7 +66,7 @@ public class AuthController {
 		if(userRepository.findByUsername(siteUser.getUsername()).isPresent()) {
 			//참이면->이미지 해당 username존재하므로 가입불가
 			Map<String, String> error = new HashMap<>();
-			error.put("iderror", "이미 존재하는 사용자명입니다");
+			error.put("username", "이미 존재하는 사용자명입니다");
 			return ResponseEntity.badRequest().body(error); //가입실패
 		}
 		siteUser.setPassword(passwordEncoder.encode(siteUser.getPassword()));
