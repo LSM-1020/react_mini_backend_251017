@@ -75,8 +75,7 @@ public class BoardController {
 	        Map<String, Object> postMap = new HashMap<>();
 	        postMap.put("id", board.getId());
 	        postMap.put("title", board.getTitle());
-	        postMap.put("author", board.getAuthor().getUsername());
-	        postMap.put("viewCount", board.getViewCount());
+	        postMap.put("author", board.getAuthor().getUsername()); 
 	        postMap.put("createDate", board.getCreateDate());
 	        postMap.put("commentCount",
 	                (board.getComments() == null) ? 0 : board.getComments().size());
