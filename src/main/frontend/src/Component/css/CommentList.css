@@ -1,0 +1,122 @@
+/* CommentList.css - 개발자 게시판 댓글 리스트 */
+
+.comment-list {
+  list-style: none;
+  padding: 0;
+  margin-top: 20px;
+}
+
+.comment-item {
+  border: 1px solid #e5e7eb;
+  padding: 15px 18px;
+  border-radius: 8px;
+  margin-bottom: 14px;
+  background-color: #f9fafb;
+  transition: all 0.2s ease;
+}
+
+.comment-item:hover {
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+}
+
+.comment-header {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.95rem; /* 글자크기 증가 */
+  color: #6b7280;
+  margin-bottom: 10px;
+  gap: 15px; /* 작성자와 날짜 사이 간격 추가 */
+}
+
+.comment-author {
+  font-weight: 600;
+  color: #111827;
+  margin-left: 20px; /* 추가 여백 */
+}
+
+.comment-date {
+  font-style: italic;
+  margin-right: 20px; /* 추가 여백 */
+}
+
+.comment-content {
+  font-size: 28px; /* 글자크기 증가 */
+  color: #374151;
+  margin-bottom: 10px;
+  white-space: pre-wrap;
+}
+
+.button-group {
+  display: flex;
+  gap: 8px;
+}
+
+.comment-edit,
+.comment-delete,
+.comment-save,
+.comment-cancel {
+  padding: 5px 12px;
+  border: none;
+  border-radius: 6px;
+  font-size: 0.9rem; /* 글자크기 조금 증가 */
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.comment-edit {
+  background-color: #3b82f6;
+  color: #fff;
+}
+
+.comment-edit:hover {
+  background-color: #2563eb;
+}
+
+.comment-delete {
+  background-color: #ef4444;
+  color: #fff;
+}
+
+.comment-delete:hover {
+  background-color: #b91c1c;
+}
+
+.comment-save {
+  background-color: #10b981;
+  color: #fff;
+}
+
+.comment-save:hover {
+  background-color: #059669;
+}
+
+.comment-cancel {
+  background-color: #6b7280;
+  color: #fff;
+}
+
+.comment-cancel:hover {
+  background-color: #4b5563;
+}
+
+.comment-savegroup {
+  display: flex;
+  gap: 8px;
+  margin-top: 8px;
+}
+
+.comment-item textarea {
+  width: 100%;
+  padding: 10px 12px; /* 내부 여백 증가 */
+  border-radius: 6px;
+  border: 1px solid #d1d5db;
+  font-size: 1rem; /* 글자크기 증가 */
+  resize: vertical;
+  margin-bottom: 6px;
+}
+
+.comment-item textarea:focus {
+  outline: none;
+  border-color: #3b82f6;
+  box-shadow: 0 0 5px rgba(59, 130, 246, 0.3);
+}

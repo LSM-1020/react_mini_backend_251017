@@ -1,0 +1,65 @@
+/* LoginPage.css - 개발자 게시판 로그인 페이지 */
+
+.login-page {
+  max-width: 400px;
+  margin: 60px auto;
+  padding: 30px 25px;
+  background-color: #f7f9fc;
+  border-radius: 12px;
+  box-shadow: 0 6px 15px rgba(0, 0, 0, 0.08);
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.login-page h2 {
+  text-align: center;
+  font-size: 1.8rem;
+  color: #1d4ed8;
+  margin-bottom: 25px;
+}
+
+.login-form label {
+  display: block;
+  margin-bottom: 15px;
+  font-size: 0.95rem;
+  color: #374151;
+}
+
+.login-form input {
+  width: 100%;
+  padding: 10px 12px;
+  margin-top: 6px;
+  border: 1px solid #d1d5db;
+  border-radius: 8px;
+  font-size: 0.95rem;
+  transition: all 0.2s ease;
+}
+
+.login-form input:focus {
+  outline: none;
+  border-color: #3b82f6;
+  box-shadow: 0 0 5px rgba(59, 130, 246, 0.3);
+}
+
+.login-form button {
+  width: 100%;
+  padding: 10px 0;
+  margin-top: 15px;
+  background-color: #3b82f6;
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  font-size: 1rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.login-form button:hover {
+  background-color: #2563eb;
+}
+
+.login-form p.error {
+  color: #b91c1c;
+  font-size: 0.85rem;
+  margin-top: 5px;
+}

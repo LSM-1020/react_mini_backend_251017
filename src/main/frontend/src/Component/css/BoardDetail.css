@@ -1,0 +1,139 @@
+/* BoardDetail.css - 개발자 게시판 상세 페이지 스타일 */
+
+.board-detail-page {
+  max-width: 800px;
+  margin: 40px auto;
+  padding: 25px;
+  background-color: #f7f9fc;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.board-detail-page h2 {
+  font-size: 1.8rem;
+  color: #1d4ed8;
+  margin-bottom: 10px;
+  word-break: break-word;
+}
+
+.board-detail-meta {
+  font-size: 15px;
+  color: #6b7280;
+  margin-bottom: 20px;
+}
+
+.board-detail-content {
+  font-size: 15px;
+  line-height: 1.7;
+  background-color: #ffffff;
+  padding: 15px;
+  border-radius: 10px;
+  border: 1px solid #e5e7eb;
+  margin-bottom: 25px;
+  white-space: pre-wrap;
+  text-align: left;
+}
+
+.comments-section {
+  margin-top: 30px;
+}
+
+.comments-section h3 {
+  font-size: 1.2rem;
+  margin-bottom: 15px;
+  color: #3b82f6;
+}
+
+.button-group {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+  margin-top: 20px;
+}
+
+.button-group button {
+  padding: 8px 16px;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: 500;
+  transition: all 0.2s ease;
+}
+
+/* 글목록 버튼 */
+.list-button {
+  background-color: #e5e7eb;
+  color: #374151;
+}
+
+.list-button:hover {
+  background-color: #d1d5db;
+}
+
+/* 수정 버튼 */
+.edit-button {
+  background-color: #3b82f6;
+  color: white;
+}
+
+.edit-button:hover {
+  background-color: #2563eb;
+}
+
+/* 삭제 버튼 */
+.delete-button {
+  background-color: #ef4444;
+  color: white;
+}
+
+.delete-button:hover {
+  background-color: #b91c1c;
+}
+
+/* 댓글 폼, CommentForm에서 쓰임 */
+.comment-form textarea {
+  width: 100%;
+  padding: 10px;
+  border-radius: 8px;
+  border: 1px solid #d1d5db;
+  resize: none;
+  font-size: 0.95rem;
+  margin-bottom: 8px;
+}
+
+.comment-form button {
+  padding: 6px 14px;
+  background-color: #10b981;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+.comment-form button:hover {
+  background-color: #059669;
+}
+
+/* 댓글 리스트 */
+.comment-item {
+  border-bottom: 1px solid #e5e7eb;
+  padding: 8px 0;
+}
+
+.comment-author {
+  font-weight: 600;
+  color: #1f2937;
+  margin-right: 8px;
+}
+
+.comment-content {
+  font-size: 0.95rem;
+  color: #374151;
+  margin-top: 2px;
+}
+
+.comment-timestamp {
+  font-size: 0.8rem;
+  color: #6b7280;
+}

@@ -1,0 +1,47 @@
+.code-runner-container {
+  margin-top: 20px;
+  padding: 20px;
+  border: 1px solid #d1d5db;
+  border-radius: 10px;
+  background-color: #f3f4f6;
+  box-sizing: border-box;
+}
+
+.code-runner textarea {
+  width: 100%;
+  box-sizing: border-box; /* 내용이 박스 밖으로 나가는 걸 방지 */
+  font-family: "Courier New", monospace;
+  font-size: 0.95rem;
+  padding: 10px;
+  margin-bottom: 10px;
+  border: 1px solid #d1d5db;
+  border-radius: 6px;
+  resize: vertical; /* 높이만 조절 가능 */
+  background-color: white;
+}
+
+.btn-run {
+  padding: 8px 16px;
+  background-color: #3b82f6;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: 500;
+  transition: background-color 0.2s ease;
+}
+
+.btn-run:hover {
+  background-color: #2563eb;
+}
+
+.code-output {
+  margin-top: 15px;
+  padding: 12px;
+  background-color: #e5e7eb;
+  border-radius: 6px;
+  white-space: pre-wrap;
+  font-family: "Courier New", monospace;
+  max-height: 300px;
+  overflow-y: auto; /* 출력이 길어지면 스크롤 가능 */
+}
