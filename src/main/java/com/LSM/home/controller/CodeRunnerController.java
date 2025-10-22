@@ -20,55 +20,52 @@ public class CodeRunnerController {
         Matcher matcher = pattern.matcher(userCode);
         String className;
         if (matcher.find()) {
-            className = matcher.group(1); // 사용자가 작성한 클래스 이름
+            className = matcher.group(1);
         } else {
-            // 클래스 이름이 없으면 임의 생성
             className = "TempProgram_" + UUID.randomUUID().toString().replace("-", "");
             userCode = "public class " + className + " {\n" + userCode + "\n}";
         }
 
-        File tempFile = new File(className + ".java");
+        // 시스템 임시 디렉토리 사용
+        String tempDir = System.getProperty("java.io.tmpdir");
+        File javaFile = new File(tempDir, className + ".java");
 
-        try (FileWriter fw = new FileWriter(tempFile)) {
-            fw.write(userCode); // 사용자 코드 그대로 저장
+        try (FileWriter fw = new FileWriter(javaFile)) {
+            fw.write(userCode);
         } catch (IOException e) {
             return ResponseEntity.status(500).body("파일 생성 실패: " + e.getMessage());
         }
 
         try {
             // 컴파일
-            Process compileProcess = new ProcessBuilder("javac", tempFile.getName()).start();
+            Process compileProcess = new ProcessBuilder("javac", javaFile.getAbsolutePath())
+                    .redirectErrorStream(true)
+                    .start();
             compileProcess.waitFor();
 
-            BufferedReader compileError = new BufferedReader(new InputStreamReader(compileProcess.getErrorStream()));
+            BufferedReader compileOutput = new BufferedReader(new InputStreamReader(compileProcess.getInputStream()));
             StringBuilder compileErrMsg = new StringBuilder();
             String line;
-            while ((line = compileError.readLine()) != null) compileErrMsg.append(line).append("\n");
+            while ((line = compileOutput.readLine()) != null) compileErrMsg.append(line).append("\n");
 
             if (compileErrMsg.length() > 0) {
                 return ResponseEntity.ok(new CodeResponse(false, compileErrMsg.toString()));
             }
 
-            // 실행
-            Process runProcess = new ProcessBuilder("java", className).start();
-            BufferedReader runOutput = new BufferedReader(new InputStreamReader(runProcess.getInputStream()));
-            BufferedReader runError = new BufferedReader(new InputStreamReader(runProcess.getErrorStream()));
+            // 실행 (classpath에 temp 디렉토리 지정)
+            Process runProcess = new ProcessBuilder("java", "-cp", tempDir, className)
+                    .redirectErrorStream(true)
+                    .start();
 
+            BufferedReader runOutput = new BufferedReader(new InputStreamReader(runProcess.getInputStream()));
             StringBuilder output = new StringBuilder();
             while ((line = runOutput.readLine()) != null) output.append(line).append("\n");
-
-            StringBuilder errorOutput = new StringBuilder();
-            while ((line = runError.readLine()) != null) errorOutput.append(line).append("\n");
 
             runProcess.waitFor();
 
             // 파일 삭제
-            tempFile.delete();
-            new File(className + ".class").delete();
-
-            if (errorOutput.length() > 0) {
-                return ResponseEntity.ok(new CodeResponse(false, errorOutput.toString()));
-            }
+            javaFile.delete();
+            new File(tempDir, className + ".class").delete();
 
             return ResponseEntity.ok(new CodeResponse(true, output.toString()));
 
@@ -88,7 +85,10 @@ public class CodeRunnerController {
     public static class CodeResponse {
         private boolean success;
         private String output;
-        public CodeResponse(boolean success, String output) { this.success = success; this.output = output; }
+        public CodeResponse(boolean success, String output) {
+            this.success = success;
+            this.output = output;
+        }
         public boolean isSuccess() { return success; }
         public String getOutput() { return output; }
     }
